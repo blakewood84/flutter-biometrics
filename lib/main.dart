@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 
 import 'dart:developer' as devtools;
@@ -18,10 +19,29 @@ class MyApp extends StatelessWidget {
     devtools.log('Can Authenticate: $canAuthenticate');
   }
 
+  void _listAvailableBiometrics() async {
+    final auth = LocalAuthentication();
+    devtools.log('Checking Available Biometrics');
+    final availableBiometrics = await auth.getAvailableBiometrics();
+    devtools.log('Available Biometrics: $availableBiometrics');
+
+    for (final biometric in availableBiometrics) {
+      devtools.log('Biometric: $biometric');
+    }
+  }
+
+  void _authenticate() async {
+    try {
+      final auth = LocalAuthentication();
+      final didAuthenticate = await auth.authenticate(localizedReason: 'Please Authenticate');
+      devtools.log('Did Authenticate: $didAuthenticate');
+    } on PlatformException catch (error) {
+      devtools.log('Error: $error');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -34,8 +54,8 @@ class MyApp extends StatelessWidget {
         ),
         body: Scaffold(
           body: SizedBox(
-            width: size.width,
-            height: size.height,
+            width: double.infinity,
+            height: double.infinity,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -45,6 +65,18 @@ class MyApp extends StatelessWidget {
                     _checkCanAuthenticate();
                   },
                   child: const Text('Can Authenticate with Biometrics'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    _listAvailableBiometrics();
+                  },
+                  child: const Text('Check Available Biometrics'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    _authenticate();
+                  },
+                  child: const Text('Authenticate'),
                 ),
               ],
             ),
