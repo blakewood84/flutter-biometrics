@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:local_auth/local_auth.dart';
+
+import 'dart:developer' as devtools;
 
 void main() {
   runApp(const MyApp());
@@ -7,7 +10,14 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+  void _checkCanAuthenticate() async {
+    final auth = LocalAuthentication();
+    final canAuthenticateWithBiometrics = await auth.canCheckBiometrics;
+    final canAuthenticate = canAuthenticateWithBiometrics || await auth.isDeviceSupported();
+
+    devtools.log('Can Authenticate: $canAuthenticate');
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -31,8 +41,10 @@ class MyApp extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 ElevatedButton(
-                  onPressed: () {},
-                  child: const Text('Test BioMetrics'),
+                  onPressed: () {
+                    _checkCanAuthenticate();
+                  },
+                  child: const Text('Can Authenticate with Biometrics'),
                 ),
               ],
             ),
