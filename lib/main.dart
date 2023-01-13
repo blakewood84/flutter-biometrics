@@ -10,6 +10,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -17,8 +19,24 @@ class MyApp extends StatelessWidget {
       ),
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Boom2!'),
+          title: const Text('Testing Biometrics'),
           centerTitle: true,
+        ),
+        body: Scaffold(
+          body: SizedBox(
+            width: size.width,
+            height: size.height,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () {},
+                  child: const Text('Test BioMetrics'),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
