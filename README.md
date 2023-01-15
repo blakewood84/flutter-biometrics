@@ -1,3 +1,3 @@
 # biometrics
 
-A Flutter project experimenting with Biometrics for iOS and Android...
+A Flutter project experimenting with Biometrics for iOS and Android.
