@@ -61,13 +61,31 @@ class MyApp extends StatelessWidget {
   }
 
   void _startNFCScanSession() async {
-    NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
-      // Do something with an NfcTag instance.
-      devtools.log('Scanning... Tag: $tag');
-    });
+    devtools.log('Starting Scan....');
+    NfcManager.instance.startSession(
+      onDiscovered: (NfcTag tag) async {
+        devtools.log('Tag Detected');
+        Ndef? ndef = Ndef.from(tag);
+
+        if (ndef == null) {
+          print('Tag is not compatible with NDEF');
+          return;
+        }
+        // Do something with an NfcTag instance.
+        devtools.log('Scanning... Tag: ${tag.data}');
+        _stopNFCScanning();
+      },
+      pollingOptions: {
+        NfcPollingOption.iso14443,
+        NfcPollingOption.iso15693,
+        NfcPollingOption.iso18092,
+      },
+      alertMessage: 'Session Started',
+    );
   }
 
   void _stopNFCScanning() async {
+    devtools.log('Stopping Scan...');
     NfcManager.instance.stopSession();
   }
 
@@ -125,7 +143,7 @@ class MyApp extends StatelessWidget {
                   onPressed: () {
                     _stopNFCScanning();
                   },
-                  child: const Text('Start Scanning'),
+                  child: const Text('Stop Scanning'),
                 ),
               ],
             ),
