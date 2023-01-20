@@ -40,6 +40,19 @@ class MyApp extends StatelessWidget {
     }
   }
 
+  void _authenticateWithBiometrics() async {
+    try {
+      final auth = LocalAuthentication();
+      final didAuthenticate = await auth.authenticate(
+        localizedReason: 'Please Authenticate',
+        options: const AuthenticationOptions(biometricOnly: true),
+      );
+      devtools.log('Did Authenticate: $didAuthenticate');
+    } on PlatformException catch (error) {
+      devtools.log('Error: $error');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -74,7 +87,7 @@ class MyApp extends StatelessWidget {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    _authenticate();
+                    _authenticateWithBiometrics();
                   },
                   child: const Text('Authenticate'),
                 ),
