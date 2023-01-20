@@ -4,6 +4,8 @@ import 'package:local_auth/local_auth.dart';
 
 import 'dart:developer' as devtools;
 
+import 'package:nfc_manager/nfc_manager.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -53,6 +55,22 @@ class MyApp extends StatelessWidget {
     }
   }
 
+  void _isNFCAvailable() async {
+    bool isAvailable = await NfcManager.instance.isAvailable();
+    devtools.log('Is NFC Available: $isAvailable');
+  }
+
+  void _startNFCScanSession() async {
+    NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
+      // Do something with an NfcTag instance.
+      devtools.log('Scanning... Tag: $tag');
+    });
+  }
+
+  void _stopNFCScanning() async {
+    NfcManager.instance.stopSession();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -90,6 +108,24 @@ class MyApp extends StatelessWidget {
                     _authenticateWithBiometrics();
                   },
                   child: const Text('Authenticate'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    _isNFCAvailable();
+                  },
+                  child: const Text('Is NFC Available'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    _startNFCScanSession();
+                  },
+                  child: const Text('Start Scanning'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    _stopNFCScanning();
+                  },
+                  child: const Text('Start Scanning'),
                 ),
               ],
             ),
